@@ -16,16 +16,14 @@ import java.net.URI;
 import java.net.URL;
 
 public class DriverFactory {
-    private RunType runType;
+    private final RunType runType;
     private String browserVersion;
-    private String driverName;
 
     public DriverFactory(RunType runType) {
         this.runType = runType;
     }
 
     public WebDriver getDriver(String driverName, String browserVersion) throws MalformedURLException {
-        this.driverName = driverName;
         this.browserVersion = browserVersion;
         WebDriver driver = null;
         if (DriverType.contains(driverName)) {
@@ -41,25 +39,21 @@ public class DriverFactory {
     }
 
     private WebDriver generateWebDriver(DriverType driverType) {
-        WebDriver driver;
         switch (driverType) {
-            case CHROME -> driver = getChromeDriver();
-            case FIREFOX -> driver = getFirefoxDriver();
-            case OPERA -> driver = getOperaDriver();
-            default -> throw new IllegalArgumentException(driverType + " driver not found");
+            case CHROME: return getChromeDriver();
+            case FIREFOX: return getFirefoxDriver();
+            case OPERA: return getOperaDriver();
+            default: throw new IllegalArgumentException(driverType + " driver not found");
         }
-        return driver;
     }
 
     private WebDriver generateRemoteWebDriver(DriverType driverType) throws MalformedURLException {
-        WebDriver driver;
         switch (driverType) {
-            case CHROME -> driver = getRemoteChromeDriver();
-            case FIREFOX -> driver = getRemoteFirefoxDriver();
-            case OPERA -> driver = getRemoteOperaDriver();
-            default -> throw new IllegalArgumentException(driverType + " driver not found");
+            case CHROME: return getRemoteChromeDriver();
+            case FIREFOX: return getRemoteFirefoxDriver();
+            case OPERA: return getRemoteOperaDriver();
+            default: throw new IllegalArgumentException(driverType + " driver not found");
         }
-        return driver;
     }
 
     private WebDriver getChromeDriver() {
@@ -121,12 +115,12 @@ public class DriverFactory {
 
     private String getPath(DriverType driverType){
         String path = "";
-        return switch (driverType) {
-            case CHROME -> Constants.PATH_TO_CHROME_DRIVER;
-            case OPERA -> Constants.PATH_TO_OPERA_DRIVER;
-            case FIREFOX -> Constants.PATH_TO_FIREFOX_DRIVER;
-            default -> path;
-        };
+        switch (driverType) {
+            case CHROME: return Constants.PATH_TO_CHROME_DRIVER;
+            case OPERA: return Constants.PATH_TO_OPERA_DRIVER;
+            case FIREFOX: return Constants.PATH_TO_FIREFOX_DRIVER;
+            default: return path;
+        }
     }
 
 }
