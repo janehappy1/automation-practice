@@ -14,6 +14,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Optional;
 
 public class DriverFactory {
     private final RunType runType;
@@ -90,8 +91,10 @@ public class DriverFactory {
         capabilities.setCapability("enableVideo", false);
         options.merge(capabilities);
 
+        String selenoidUrl = Optional.of(System.getProperty("selenoid-url")).orElse(Constants.SELENOID_URL);
+
         return new RemoteWebDriver(
-                URI.create("http://localhost:4444/wd/hub").toURL(),
+                URI.create(selenoidUrl).toURL(),
                 options
         );
     }
@@ -102,7 +105,8 @@ public class DriverFactory {
                 browserVersion.equals("") ? Constants.DEFAULT_FIREFOX_VERSION : browserVersion
         );
         capabilities.setCapability("enableVNC", true);
-        return new RemoteWebDriver(new URL(Constants.SELENOID_URL), capabilities);
+        String selenoidUrl = Optional.of(System.getProperty("selenoid-url")).orElse(Constants.SELENOID_URL);
+        return new RemoteWebDriver(new URL(selenoidUrl), capabilities);
     }
 
     private WebDriver getRemoteOperaDriver() throws MalformedURLException {
@@ -110,7 +114,8 @@ public class DriverFactory {
         capabilities.setVersion(
                 browserVersion.equals("") ? Constants.DEFAULT_OPERA_VERSION : browserVersion
         );
-        return new RemoteWebDriver(new URL(Constants.SELENOID_URL), capabilities);
+        String selenoidUrl = Optional.of(System.getProperty("selenoid-url")).orElse(Constants.SELENOID_URL);
+        return new RemoteWebDriver(new URL(selenoidUrl), capabilities);
     }
 
     private String getPath(DriverType driverType){
